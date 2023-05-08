@@ -1,0 +1,26 @@
+#!/bin/sh
+SPY_DIR=$(dirname $(dirname -- "$0"))
+if [ $# -eq 0 ]; then
+	res=$(python3 "$SPY_DIR/find.py" | fzf --preview='batcat -n --color=always {}/.spy.py')
+	if [ "$res" ]; then
+		cd $res
+		spy edit
+	fi
+else
+	case "$1" in
+		init)
+			if [ -f ".env.py" ]; then
+				echo "The directory is already initiated with spy"
+			else
+				cp "$SPY_DIR/bootstrap/.spy.$2" ".spy.$2"
+			fi
+			;;
+		self)
+			cd "$SPY_DIR"
+			vim "$SPY_DIR/run.py"
+			;;
+		*)
+			python3 $SPY_DIR/run.py $@
+			;;
+	esac
+fi

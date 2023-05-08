@@ -1,6 +1,7 @@
 import os
 import argparse
 from spy_modules.module_loaders import ENV_FILE_NAME, find_root_dir, load_module
+from spy_modules.projects import  find_projects
 
 SPY_MODULE_DIR = '/home/dhaval/Hive/spy'
 
