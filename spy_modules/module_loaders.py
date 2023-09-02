@@ -1,4 +1,5 @@
-import importlib, os, pathlib, sys
+import os, pathlib, sys
+from importlib import util
 import glob
 
 ENV_FILE_NAME = '.spy.py'
@@ -17,7 +18,7 @@ def find_root_dir():
                 break
 
 def load_module(path, module_dir):
-    spec = importlib.util.spec_from_file_location(
+    spec = util.spec_from_file_location(
         name='module',  
         location=path,
         submodule_search_locations=[
@@ -25,7 +26,7 @@ def load_module(path, module_dir):
             module_dir,
         ]
     )
-    module = importlib.util.module_from_spec(spec)
+    module = util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module
 
