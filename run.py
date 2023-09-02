@@ -3,8 +3,6 @@ import argparse
 from spy_modules.module_loaders import ENV_FILE_NAME, find_root_dir, load_module
 from spy_modules.projects import  find_projects
 
-SPY_MODULE_DIR = '/home/dhaval/Hive/spy'
-
 def print_actions(config):
     for attr in dir(config):
         if callable(getattr(config, attr)) and attr.startswith('_') is False:
@@ -17,10 +15,11 @@ if __name__ == '__main__':
         print('run \'spy init\' in root directory of project to create .spy.py file')
         quit()
     env_file = os.path.join(root_dir, ENV_FILE_NAME)
-    module = load_module(env_file, SPY_MODULE_DIR)
     argParser = argparse.ArgumentParser()
+    argParser.add_argument('directory', nargs='?', default=None, help='Module directory')
     argParser.add_argument('command', nargs='?', default='run', help='Sub command')
     args = argParser.parse_args()
+    module = load_module(env_file, args.directory)
     options = {
         'root_dir': root_dir,
     }

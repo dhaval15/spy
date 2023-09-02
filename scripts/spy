@@ -1,7 +1,7 @@
 #!/bin/sh
 SPY_DIR=$(dirname $(dirname -- "$0"))
 if [ $# -eq 0 ]; then
-	res=$(python3 "$SPY_DIR/find.py" | fzf --preview='batcat -n --color=always {}/.spy.py')
+	res=$(python3 "$SPY_DIR/find.py" $SPY_DIR | fzf --preview='batcat -n --color=always {}/.spy.py')
 	if [ "$res" ]; then
 		cd $res
 		spy :edit
@@ -20,9 +20,9 @@ else
 				fi
 				;;
 			list)
-				python3 "$SPY_DIR/find.py";;
+				python3 "$SPY_DIR/find.py" $SPY_DIR;;
 			dir)
-				res=$(python3 "$SPY_DIR/find.py" | fzf -i --preview='batcat -n --color=always {}/.spy.py')
+				res=$(python3 "$SPY_DIR/find.py" $SPY_DIR | fzf -i --preview='batcat -n --color=always {}/.spy.py')
 				if [ "$res" ]; then
 					echo $res
 				fi
@@ -33,11 +33,11 @@ else
 				;;
 			*)
 				shift # Shift the arguments to left
-				python3 $SPY_DIR/run.py $ARG $@
+				python3 $SPY_DIR/run.py $SPY_DIR $ARG $@
 				;;
 		esac
 	else
-		res=$(python3 "$SPY_DIR/find.py" | fzf -i --preview='batcat -n --color=always {}/.spy.py' --query="$ARG")
+		res=$(python3 "$SPY_DIR/find.py" $SPY_DIR | fzf -i --preview='batcat -n --color=always {}/.spy.py' --query="$ARG")
 		if [ "$res" ]; then
 			cd $res
 			spy :edit
