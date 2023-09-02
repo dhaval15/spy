@@ -5,6 +5,11 @@ from spy_modules.projects import  find_projects
 
 SPY_MODULE_DIR = '/home/dhaval/Hive/spy'
 
+def print_actions(config):
+    for attr in dir(config):
+        if callable(getattr(config, attr)) and attr.startswith('_') is False:
+            print(attr)
+
 if __name__ == '__main__':
     root_dir = find_root_dir()
     if root_dir is None:
@@ -20,6 +25,12 @@ if __name__ == '__main__':
         'root_dir': root_dir,
     }
     config = module.create_config(options)
+    if args.command == 'current':
+        print(root_dir)
+        quit()
+    if args.command == 'actions':
+        print_actions(config)
+        quit()
     command = getattr(config, args.command, None)
     if command is None:
         print(f"Subcommand: '{args.command}' not found")

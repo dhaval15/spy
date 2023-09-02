@@ -4,23 +4,43 @@ if [ $# -eq 0 ]; then
 	res=$(python3 "$SPY_DIR/find.py" | fzf --preview='batcat -n --color=always {}/.spy.py')
 	if [ "$res" ]; then
 		cd $res
-		spy edit
+		spy :edit
 	fi
 else
-	case "$1" in
-		init)
-			if [ -f ".env.py" ]; then
-				echo "The directory is already initiated with spy"
-			else
-				cp "$SPY_DIR/bootstrap/.spy.$2" ".spy.$2"
-			fi
-			;;
-		self)
-			cd "$SPY_DIR"
-			vim "$SPY_DIR/run.py"
-			;;
-		*)
-			python3 $SPY_DIR/run.py $@
-			;;
-	esac
+	ARG=$1
+	FIRST_CHAR=`echo $ARG | cut -c1`
+	if [ $FIRST_CHAR = ":" ]; then
+		ARG=`echo $ARG | cut -c2-`
+		case $ARG in
+			init)
+				if [ -f ".env.py" ]; then
+					echo "The directory is already initiated with spy"
+				else
+					cp "$SPY_DIR/bootstrap/.spy.$2" ".spy.$2"
+				fi
+				;;
+			list)
+				python3 "$SPY_DIR/find.py";;
+			dir)
+				res=$(python3 "$SPY_DIR/find.py" | fzf -i --preview='batcat -n --color=always {}/.spy.py')
+				if [ "$res" ]; then
+					echo $res
+				fi
+				;;
+			self)
+				cd "$SPY_DIR"
+				vim "$SPY_DIR/run.py"
+				;;
+			*)
+				shift # Shift the arguments to left
+				python3 $SPY_DIR/run.py $ARG $@
+				;;
+		esac
+	else
+		res=$(python3 "$SPY_DIR/find.py" | fzf -i --preview='batcat -n --color=always {}/.spy.py' --query="$ARG")
+		if [ "$res" ]; then
+			cd $res
+			spy :edit
+		fi
+	fi
 fi

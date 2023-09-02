@@ -10,18 +10,18 @@ class SpyConfig:
         os.system(command)
 
     def edit(self):
-        config = self.editor_config()
-        args = f'-c \'luafile {config}\'' if self.check_path(config) else ''
+        config = self._editor_config()
+        args = f'-c \'luafile {config}\'' if self._check_path(config) else ''
         self.run(f'vim {args}')
 
-    def editor_config(self):
+    def _editor_config(self):
         return os.path.join(self.root_dir, '.spy.lua')
 
-    def check_path(self, path):
+    def _check_path(self, path):
         return os.path.isfile(path)
 
-    def assert_path(self, path):
-        if self.check_path(path):
+    def _assert_path(self, path):
+        if self._check_path(path):
             return
         else:
             print(f'\'{path}\' does not exist')
